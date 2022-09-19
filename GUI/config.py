@@ -1,0 +1,1 @@
+WINDOW_SIZE = (1366, 768) # HD
