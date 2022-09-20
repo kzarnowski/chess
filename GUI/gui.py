@@ -7,9 +7,10 @@ from GUI.play import Play
 from GUI.settings import Settings
 from GUI.help import Help
 
-class MainWindow(QMainWindow):
+class Gui(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
+        self.app = None
         self.setFixedSize(QSize(*WINDOW_SIZE))
         self.setWindowTitle('Chess')
 

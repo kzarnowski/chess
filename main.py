@@ -1,10 +1,13 @@
-from GUI.main_window import MainWindow
+from GUI.gui import Gui
+from app.app import App
 from PyQt5.QtWidgets import QApplication
 import sys
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    ChessGame = QApplication(sys.argv)
+    gui = Gui()
+    app = App()
+    gui.app = app
+    app.gui = gui
+    sys.exit(ChessGame.exec_())
     
