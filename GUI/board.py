@@ -68,3 +68,30 @@ class Board(QFrame):
     
     def click_event(self, an):
         self.parent.parent.app.click_event(an)
+
+    def kingside_castle(self, is_white):
+        if is_white:
+            self.remove_piece('e1')
+            self.remove_piece('h1')
+            self.put_piece('K', 'g1')
+            self.put_piece('R', 'f1')
+        else:
+            self.remove_piece('e8')
+            self.remove_piece('h8')
+            self.put_piece('k', 'g8')
+            self.put_piece('r', 'f8')
+    
+    def queenside_castle(self, is_white):
+        if is_white:
+            print("GUI QUEEN WHITE")
+            self.remove_piece('e1')
+            self.remove_piece('a1')
+            self.put_piece('K', 'c1')
+            self.put_piece('R', 'd1')
+        else:
+            print("GUI QUEEN BLACK")
+            self.remove_piece('e8')
+            self.remove_piece('a8')
+            self.put_piece('k', 'c8')
+            self.put_piece('r', 'd8')
+        
