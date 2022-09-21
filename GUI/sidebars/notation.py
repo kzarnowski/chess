@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel
 
-class NotationSidebar(QFrame):
+class QtNotationSidebar(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent

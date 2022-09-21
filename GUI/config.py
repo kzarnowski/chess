@@ -8,9 +8,3 @@ squares_color = {
         'light': '#e3c16f'
     }
 }
-
-piece_path = {
-    'classic': {
-        
-    }
-}

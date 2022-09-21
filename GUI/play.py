@@ -1,19 +1,19 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-from GUI.sidebars.game_control import GameControlSidebar
-from GUI.sidebars.notation import NotationSidebar
-from GUI.board import Board
-from GUI.header import Header
+from GUI.sidebars.game_control import QtGameControlSidebar
+from GUI.sidebars.notation import QtNotationSidebar
+from GUI.board import QtBoard
+from GUI.header import QtHeader
 
-class Play(QFrame):
+class QtPlay(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
 
-        self.header = Header(self)
+        self.header = QtHeader(self)
 
-        self.game_control = GameControlSidebar(self)
-        self.board = Board(self)
-        self.notation = NotationSidebar(self)
+        self.game_control = QtGameControlSidebar(self)
+        self.board = QtBoard(self)
+        self.notation = QtNotationSidebar(self)
 
         play_layout = QHBoxLayout()
         play_layout.addWidget(self.game_control, 1)

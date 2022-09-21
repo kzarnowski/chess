@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap, QIcon
 from GUI.helpers import get_piece_png_path, rc2an
 
-class Piece(QLabel):
+class QtPiece(QLabel):
     def __init__(self, board, r, c, symbol):
         QLabel.__init__(self)
         self.board = board

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLabel, QWidget
 from GUI.helpers import rc2an
 from GUI.config import squares_color, theme
 
-class Square(QLabel):
+class QtSquare(QLabel):
     def __init__(self, board, r, c):
         QWidget.__init__(self, board)
         self.board = board

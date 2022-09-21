@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel
 
-class Menu(QFrame):
+class QtMenu(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
@@ -26,7 +26,7 @@ class Menu(QFrame):
     def help(self):
         self.parent.stack.setCurrentWidget(self.parent.help)
 
-class MenuButton(QPushButton):
+class QtMenuButton(QPushButton):
     def __init__(self, main_window):
         QPushButton.__init__(self)
         self.main_window = main_window

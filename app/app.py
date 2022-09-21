@@ -20,12 +20,17 @@ class App():
                     if self.board.is_castling(move):
                         self.handle_castling(move)
                     elif self.board.is_en_passant(move):
-                        pass
-                    elif self.is_promotion(move):
-                        # TODO
-                        pass
+                        self.handle_en_passant(move)
                     else:
                         self.gui.play.board.move_was_made(self.active_an, an)
+                    self.board.push(move)
+                elif self.is_promotion(move):
+                    is_white = self.board.turn == chess.WHITE
+                    new_piece_symbol = self.gui.play.board.get_promotion_piece(is_white)
+                    new_piece = chess.Piece.from_symbol(new_piece_symbol)
+                    move.promotion = new_piece.piece_type
+                    print(move.uci())
+                    self.gui.play.board.promotion(self.active_an, an, new_piece_symbol)
                     self.board.push(move)
                 else:
                     print('Illegal move')
@@ -53,6 +58,19 @@ class App():
             else:
                 self.gui.play.board.queenside_castle(is_white=False)
     
-    def is_promotion(self, move):
-        return False
-        #TODO
+    def handle_en_passant(self, move):
+        active_an = move.uci()[:2]
+        an = move.uci()[-2:]
+        rank = int(an[1])
+        if self.board.turn == chess.WHITE:
+            an_to_remove = an[0] + str(rank - 1)
+        else:
+            an_to_remove = an[0] + str(rank + 1)
+        self.gui.play.board.en_passant(active_an, an, an_to_remove)
+
+
+    def is_promotion(self, move):  
+        promotion_uci = move.uci() + 'q'
+        print(promotion_uci)
+        return chess.Move.from_uci(promotion_uci) in self.board.legal_moves
+        

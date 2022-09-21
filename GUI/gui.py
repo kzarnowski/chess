@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from PyQt5.QtCore import QSize
 
 from GUI.config import WINDOW_SIZE
-from GUI.menu import Menu
-from GUI.play import Play
-from GUI.settings import Settings
-from GUI.help import Help
+from GUI.menu import QtMenu
+from GUI.play import QtPlay
+from GUI.settings import QtSettings
+from GUI.help import QtHelp
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -16,10 +16,10 @@ class Gui(QMainWindow):
 
         self.stack = QStackedWidget(self)
 
-        self.menu = Menu(self)
-        self.play = Play(self)
-        self.settings = Settings(self)
-        self.help = Help(self)
+        self.menu = QtMenu(self)
+        self.play = QtPlay(self)
+        self.settings = QtSettings(self)
+        self.help = QtHelp(self)
 
         self.stack.insertWidget(0, self.menu)
         self.stack.insertWidget(1, self.play)

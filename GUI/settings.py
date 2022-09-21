@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel
-from GUI.menu import MenuButton
-from GUI.header import Header
+from GUI.menu import QtMenuButton
+from GUI.header import QtHeader
 
-class Settings(QFrame):
+class QtSettings(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
-        self.header = Header(self)
+        self.header = QtHeader(self)
 
         settings_layout = QVBoxLayout()
         settings_layout.addWidget(QLabel("Help"))

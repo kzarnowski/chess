@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QWidget, QGridLayout, QPushButton
 from PyQt5.QtCore import Qt
 from GUI.helpers import an2rc, rc2an, FEN_PIECES
-from GUI.piece import Piece
-from GUI.square import Square
+from GUI.piece import QtPiece
+from GUI.square import QtSquare
+from GUI.promotion_dialog import QtPromotionDialog
 
-class Board(QFrame):
+class QtBoard(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
@@ -17,7 +18,7 @@ class Board(QFrame):
 
         for r in range(8):
             for c in range(8):
-                square = Square(self, r, c)
+                square = QtSquare(self, r, c)
                 self.layout.addWidget(square, r, c)
         
         starting_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -26,7 +27,7 @@ class Board(QFrame):
     
     def put_piece(self, symbol, an):
         r, c = an2rc(an, self.is_flipped)
-        piece = Piece(self, r, c, symbol)
+        piece = QtPiece(self, r, c, symbol)
         self.layout.addWidget(piece, r, c, alignment=Qt.AlignCenter)
         self.pieces[an] = piece
         #print("PUT PIECE: ", symbol, " ", r, " ", c, " ", square)
@@ -94,4 +95,21 @@ class Board(QFrame):
             self.remove_piece('a8')
             self.put_piece('k', 'c8')
             self.put_piece('r', 'd8')
+    
+    def en_passant(self, active_an, an, an_to_remove):
+        self.move_was_made(active_an, an)
+        self.remove_piece(an_to_remove)
+    
+    def promotion(self, active_an, an, new_piece_symbol):
+        self.remove_piece(active_an)
+        if an in self.pieces.keys():
+            self.remove_piece(an)
+        self.put_piece(new_piece_symbol, an)
+
+    def get_promotion_piece(self, is_white):
+        dialog = QtPromotionDialog(is_white)
+        option = dialog.exec()
+        symbol = chr(option)
+        print(symbol)
+        return symbol
         
