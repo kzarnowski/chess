@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel
-from GUI.menu import QtMenuButton
+from GUI.qt_menu import QtMenuButton
 
 class QtHelp(QFrame):
     def __init__(self, parent):

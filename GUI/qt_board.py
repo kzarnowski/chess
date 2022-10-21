@@ -1,15 +1,16 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QWidget, QGridLayout, QPushButton
 from PyQt5.QtCore import Qt
 from GUI.helpers import an2rc, rc2an, FEN_PIECES
-from GUI.piece import QtPiece
-from GUI.square import QtSquare
-from GUI.promotion_dialog import QtPromotionDialog
+from GUI.qt_piece import QtPiece
+from GUI.qt_square import QtSquare
+from GUI.qt_promotion_dialog import QtPromotionDialog
 
 class QtBoard(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
-        self.is_flipped = True
+        self.gui = parent.parent
+        self.is_flipped = False
 
         self.layout = QGridLayout()
         self.setLayout(self.layout)
@@ -60,6 +61,9 @@ class QtBoard(QFrame):
         piece.deleteLater()
         del self.pieces[an]
             
+    def click_event(self, an):
+        self.gui.app.game.board_click_event(an)
+    
     def move_was_made(self, an_start, an_end):
         symbol = self.pieces[an_start].symbol
         self.remove_piece(an_start)
@@ -67,9 +71,6 @@ class QtBoard(QFrame):
             self.remove_piece(an_end)
         self.put_piece(symbol, an_end)
     
-    def click_event(self, an):
-        self.parent.parent.app.click_event(an)
-
     def kingside_castle(self, is_white):
         if is_white:
             self.remove_piece('e1')

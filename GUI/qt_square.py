@@ -3,9 +3,9 @@ from GUI.helpers import rc2an
 from GUI.config import squares_color, theme
 
 class QtSquare(QLabel):
-    def __init__(self, board, r, c):
-        QWidget.__init__(self, board)
-        self.board = board
+    def __init__(self, qt_board, r, c):
+        QWidget.__init__(self, qt_board)
+        self.qt_board = qt_board
         self.r = r
         self.c = c
         if r % 2 == c % 2:
@@ -19,7 +19,7 @@ class QtSquare(QLabel):
 
     def mousePressEvent(self, event):
         print(self.r, self.c)
-        print("RC2AN:", rc2an((self.r,self.c), self.board.is_flipped))
-        self.board.parent.header.info.setText(f'{self.r}, {self.c}')
-        an = rc2an((self.r,self.c), self.board.is_flipped)
-        self.board.click_event(an)
+        print("RC2AN:", rc2an((self.r,self.c), self.qt_board.is_flipped))
+        self.qt_board.parent.header.info.setText(f'{self.r}, {self.c}')
+        an = rc2an((self.r,self.c), self.qt_board.is_flipped)
+        self.qt_board.click_event(an)

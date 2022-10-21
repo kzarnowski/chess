@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QPushButton, QLabel
-from GUI.menu import QtMenuButton
-from GUI.header import QtHeader
+from GUI.qt_menu import QtMenuButton
+from GUI.qt_header import QtHeader
 
 class QtSettings(QFrame):
     def __init__(self, parent):

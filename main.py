@@ -10,4 +10,6 @@ if __name__ == '__main__':
     gui.app = app
     app.gui = gui
     sys.exit(ChessGame.exec_())
+
+
     
