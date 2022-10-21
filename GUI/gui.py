@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from PyQt5.QtCore import QSize
 
-from GUI.config import WINDOW_SIZE
 from GUI.qt_menu import QtMenu
 from GUI.qt_game import QtGame
 from GUI.qt_settings import QtSettings
 from GUI.qt_help import QtHelp
+
+WINDOW_SIZE = (1366, 768)
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -13,6 +14,9 @@ class Gui(QMainWindow):
         self.app = None
         self.setFixedSize(QSize(*WINDOW_SIZE))
         self.setWindowTitle('Chess')
+
+        # Init gui settings
+        self.theme = 'classic'
 
         self.stack = QStackedWidget(self)
 
@@ -27,6 +31,10 @@ class Gui(QMainWindow):
         self.stack.insertWidget(3, self.qt_help)
 
         self.stack.setCurrentWidget(self.qt_menu)
-
         self.setCentralWidget(self.stack)
+
         self.show()
+
+    
+
+    

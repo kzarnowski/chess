@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QLabel, QWidget
 from GUI.helpers import rc2an
-from GUI.config import squares_color, theme
 
 class QtSquare(QLabel):
     def __init__(self, qt_board, r, c):
@@ -9,9 +8,9 @@ class QtSquare(QLabel):
         self.r = r
         self.c = c
         if r % 2 == c % 2:
-            self.color = squares_color[theme]['light']
+            self.color = self.qt_board.get_squares_color()['light']
         else:
-            self.color = squares_color[theme]['dark'] 
+            self.color = self.qt_board.get_squares_color()['dark'] 
         self.setStyleSheet(f'background-color: {self.color}')
 
     def set_color(self, color):

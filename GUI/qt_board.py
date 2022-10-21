@@ -11,7 +11,6 @@ class QtBoard(QFrame):
         self.parent = parent
         self.gui = parent.parent
         self.is_flipped = False
-
         self.layout = QGridLayout()
         self.setLayout(self.layout)
         self.layout.setSpacing(0)
@@ -21,10 +20,25 @@ class QtBoard(QFrame):
             for c in range(8):
                 square = QtSquare(self, r, c)
                 self.layout.addWidget(square, r, c)
-        
+
+    def display_starting_position(self, playing_as_white):
+        self.is_flipped = not playing_as_white
+        self.remove_all_pieces() # remove pieces from previous game   
         starting_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-        fen = 'r2q1nk1/1R2r2p/p2p2pQ/2pP1P1n/N7/P7/3N1PPP/1R4K1 w - - 1 26'
         self.set_position_from_fen(starting_fen)
+
+    def remove_all_pieces(self):
+        for an in list(self.pieces.keys()):
+            self.remove_piece(an)
+
+    def get_squares_color(self):
+        squares_color = {
+            'classic': {
+                'dark': '#b88a4a',
+                'light': '#e3c16f'
+            }
+        }
+        return squares_color[self.gui.theme]
     
     def put_piece(self, symbol, an):
         r, c = an2rc(an, self.is_flipped)
@@ -42,7 +56,6 @@ class QtBoard(QFrame):
             c = 0
             i = 0
             while c < 8:
-                print(r, " ", c)
                 symbol = rows[r][i]
                 if symbol in FEN_PIECES:
                     if self.is_flipped:   
@@ -108,9 +121,10 @@ class QtBoard(QFrame):
         self.put_piece(new_piece_symbol, an)
 
     def get_promotion_piece(self, is_white):
-        dialog = QtPromotionDialog(is_white)
+        dialog = QtPromotionDialog(is_white, self.get_squares_color()['light'])
         option = dialog.exec()
         symbol = chr(option)
         print(symbol)
         return symbol
+
         

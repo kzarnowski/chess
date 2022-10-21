@@ -25,6 +25,7 @@ class QtGame(QFrame):
         layout.addLayout(game_layout, 23)
         self.setLayout(layout)
 
+
     def move_was_made(self, an_start, an_end):
         self.qt_board.move_was_made(an_start, an_end)
     
@@ -43,3 +44,8 @@ class QtGame(QFrame):
     def get_promotion_piece(self, is_white):
         piece = self.qt_board.get_promotion_piece(is_white)
         return piece
+    
+    def display_result(self, result):
+        self.header.info.setText(f'Result: {result}')
+    
+    

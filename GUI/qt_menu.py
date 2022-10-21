@@ -36,4 +36,5 @@ class QtMenuButton(QPushButton):
         
     def btn_clicked(self):
         self.main_window.stack.setCurrentWidget(self.main_window.qt_menu)
+
         
