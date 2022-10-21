@@ -9,7 +9,7 @@ class App():
         self.engine = Engine()
 
         # Init default app settings
-        self.playing_as_white = False
+        self.playing_as_white = True
         self.engine_depth = 5
     
     def new_game(self, qt_game):

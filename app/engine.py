@@ -6,5 +6,5 @@ class Engine:
         pass
 
     def get_best_move(self, board, depth):
-        move = choice(board.legal_moves)
+        move = choice(list(board.legal_moves))
         return move
