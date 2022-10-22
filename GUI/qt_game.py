@@ -51,4 +51,13 @@ class QtGame(QFrame):
     def display_result(self, result):
         self.header.info.setText(f'Result: {result}')
     
+    def update_notation(self, move_san, half_move_num):
+        full_move_num = half_move_num // 2 + 1
+        is_white_move = not half_move_num % 2
+        current_text = self.qt_right_sidebar.notation.toPlainText()
+        if is_white_move:
+            notation = current_text + str(full_move_num) + '. ' + move_san
+        else:
+            notation = current_text + ',  ' + move_san + '\n'
+        self.qt_right_sidebar.notation.setText(notation)
     

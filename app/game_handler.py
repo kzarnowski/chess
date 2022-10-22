@@ -1,5 +1,7 @@
 import chess
+import chess.pgn
 from app.worker import  EngineWorker
+from datetime import date
 
 class GameHandler():
     def __init__(self, qt_game, playing_as_white, engine):
@@ -9,8 +11,20 @@ class GameHandler():
         self.move_in_progress = False
         self.active_an = None
         self.is_player_move = playing_as_white
+        self.playing_as_white = playing_as_white
         self.engine = engine
         self.depth = 10
+        self.pgn = self.create_pgn()
+    
+    def create_pgn(self):
+        pgn = chess.pgn.Game()
+        pgn.headers['Event'] = 'New Game'
+        pgn.headers['Date'] = date.today().strftime('%Y.%m.%d')
+        pgn.headers['Site'] = 'Chess App'
+        pgn.headers['Round'] = '1'
+        pgn.headers['White'] = 'User' if self.playing_as_white else 'Computer'
+        pgn.headers['Black'] = 'Computer' if self.playing_as_white else 'User'
+        return pgn
 
     def get_worker(self):
         worker = EngineWorker(self.engine, self.board, self.depth)
@@ -20,8 +34,10 @@ class GameHandler():
         return worker
 
     def handle_worker_result(self, move):
+        self.update_sidebars(move)
         self.board.push(move)
         self.display_engine_move(move)
+        self.pgn.add_main_variation(move)
         print(move)
 
     def handle_worker_progress(self, data):
@@ -29,6 +45,7 @@ class GameHandler():
 
     def handle_worker_complete(self):
         self.is_player_move = True
+        
         print("Completed")
 
     def make_engine_move(self):
@@ -74,7 +91,9 @@ class GameHandler():
                 self.move_in_progress = False
                 self.active_an = None
             else:
+                self.update_sidebars(move)
                 self.board.push(move)
+                self.pgn.add_main_variation(move)
                 self.move_in_progress = False
                 self.active_an = None
                 outcome = self.board.outcome()
@@ -127,5 +146,10 @@ class GameHandler():
         outcome = self.board.outcome()
         if outcome:
             self.qt_game.display_result(outcome.result())
+
+    def update_sidebars(self, move):
+        move_san = self.board.san(move)
+        half_move_num = self.board.ply()
+        self.qt_game.update_notation(move_san, half_move_num)
 
 
