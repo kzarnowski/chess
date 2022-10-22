@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, QThreadPool
 
 from GUI.qt_menu import QtMenu
 from GUI.qt_game import QtGame

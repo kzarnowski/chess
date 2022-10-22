@@ -15,11 +15,13 @@ class QtBoard(QFrame):
         self.setLayout(self.layout)
         self.layout.setSpacing(0)
         self.pieces = {}
+        self.squares = {}
 
         for r in range(8):
             for c in range(8):
                 square = QtSquare(self, r, c)
                 self.layout.addWidget(square, r, c)
+                self.squares[str(r+c)] = square
 
     def display_starting_position(self, playing_as_white):
         self.is_flipped = not playing_as_white
@@ -126,5 +128,13 @@ class QtBoard(QFrame):
         symbol = chr(option)
         print(symbol)
         return symbol
+
+    def display_highlight_at_active_square(self, an):
+        r, c = an2rc(an, self.is_flipped)
+        active_square = self.squares[str(r+c)]
+        active_square.set_color('#9e9897')
+
+    def get_square_from_an(self, an):
+        pass
 
         

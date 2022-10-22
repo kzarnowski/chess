@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+from PyQt5.QtCore import QThreadPool
 from GUI.sidebars.qt_left_sidebar import QtLeftSidebar
 from GUI.sidebars.qt_right_sidebar import QtRightSidebar
 from GUI.qt_board import QtBoard
@@ -24,6 +25,8 @@ class QtGame(QFrame):
         layout.addWidget(self.header, 1)
         layout.addLayout(game_layout, 23)
         self.setLayout(layout)
+
+        self.threadpool = QThreadPool()
 
 
     def move_was_made(self, an_start, an_end):

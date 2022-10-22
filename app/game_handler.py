@@ -1,5 +1,5 @@
-
 import chess
+from app.worker import  EngineWorker
 
 class GameHandler():
     def __init__(self, qt_game, playing_as_white, engine):
@@ -10,12 +10,31 @@ class GameHandler():
         self.active_an = None
         self.is_player_move = playing_as_white
         self.engine = engine
+        self.depth = 10
 
-    def make_engine_move(self):
-        move = self.engine.get_best_move(self.board, depth=10)
+    def get_worker(self):
+        worker = EngineWorker(self.engine, self.board, self.depth)
+        worker.signals.result.connect(self.handle_worker_result)
+        worker.signals.finished.connect(self.handle_worker_complete)
+        worker.signals.progress.connect(self.handle_worker_progress)
+        return worker
+
+    def handle_worker_result(self, move):
         self.board.push(move)
         self.display_engine_move(move)
+        print(move)
 
+    def handle_worker_progress(self, data):
+        print(data)
+
+    def handle_worker_complete(self):
+        self.is_player_move = True
+        print("Completed")
+
+    def make_engine_move(self):
+        worker = self.get_worker()
+        self.qt_game.threadpool.start(worker)
+        
     def display_engine_move(self, move):
         an_start = move.uci()[:2]
         an_end = move.uci()[2:4]
@@ -63,14 +82,14 @@ class GameHandler():
                     self.qt_game.display_result(outcome.result())
                 else:
                     self.is_player_move = False
-                    self.make_engine_move()
-                    self.is_player_move = True         
+                    self.make_engine_move()     
         else:
             square = chess.parse_square(an)
             piece = self.board.piece_at(square)
             if piece:
                 self.move_in_progress = True
                 self.active_an = an
+                #self.qt_board.display_highlight_at_active_square(an)
 
     def handle_castling(self, move):
         if self.board.is_kingside_castling(move):
