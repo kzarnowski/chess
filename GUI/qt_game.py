@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtCore import QThreadPool
+from PyQt5.QtGui import QTextCursor
 from GUI.sidebars.qt_left_sidebar import QtLeftSidebar
 from GUI.sidebars.qt_right_sidebar import QtRightSidebar
 from GUI.qt_board import QtBoard
@@ -9,7 +10,7 @@ class QtGame(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
-
+        self.game_handler = None
         self.header = QtHeader(self)
 
         self.qt_left_sidebar = QtLeftSidebar(self)
@@ -59,5 +60,9 @@ class QtGame(QFrame):
             notation = current_text + str(full_move_num) + '. ' + move_san
         else:
             notation = current_text + ',  ' + move_san + '\n'
-        self.qt_right_sidebar.notation.setText(notation)
+        self.qt_right_sidebar.notation.setText(notation) 
+    
+    def update_fen(self, fen_str):
+        self.qt_right_sidebar.fen.setText(fen_str)
+
     

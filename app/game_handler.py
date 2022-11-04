@@ -6,6 +6,7 @@ from datetime import date
 class GameHandler():
     def __init__(self, qt_game, playing_as_white, engine):
         self.qt_game = qt_game
+        qt_game.game_handler = self
         self.qt_board = qt_game.qt_board
         self.board = chess.Board()
         self.move_in_progress = False
@@ -13,9 +14,20 @@ class GameHandler():
         self.is_player_move = playing_as_white
         self.playing_as_white = playing_as_white
         self.engine = engine
-        self.depth = 10
+        self.depth = 4
         self.pgn = self.create_pgn()
     
+    def get_pgn(self):
+        pgn = chess.pgn.Game()
+        pgn = pgn.from_board(self.board)
+        pgn.headers['Event'] = 'New Game'
+        pgn.headers['Date'] = date.today().strftime('%Y.%m.%d')
+        pgn.headers['Site'] = 'Chess App'
+        pgn.headers['Round'] = '1'
+        pgn.headers['White'] = 'User' if self.playing_as_white else 'Computer'
+        pgn.headers['Black'] = 'Computer' if self.playing_as_white else 'User'
+        return pgn
+
     def create_pgn(self):
         pgn = chess.pgn.Game()
         pgn.headers['Event'] = 'New Game'
@@ -34,9 +46,19 @@ class GameHandler():
         return worker
 
     def handle_worker_result(self, move):
-        self.update_sidebars(move)
-        self.board.push(move)
-        self.display_engine_move(move)
+        if self.board.is_castling(move):
+            self.update_sidebars(move)
+            self.handle_castling(move)
+            self.board.push(move)
+        elif self.board.is_en_passant(move):
+            self.update_sidebars(move)
+            self.handle_en_passant(move)
+            self.board.push(move)
+        else:
+            self.update_sidebars(move)
+            self.board.push(move)
+            self.display_engine_move(move)
+            
         self.pgn.add_main_variation(move)
         print(move)
 
@@ -151,5 +173,6 @@ class GameHandler():
         move_san = self.board.san(move)
         half_move_num = self.board.ply()
         self.qt_game.update_notation(move_san, half_move_num)
+        self.qt_game.update_fen(self.board.fen())
 
 
