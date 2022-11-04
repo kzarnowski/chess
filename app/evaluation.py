@@ -7,7 +7,7 @@ PIECE_VALUES = {
     chess.BISHOP: 350,
     chess.ROOK: 525,
     chess.QUEEN: 1000,
-    chess.KING: 10000
+    chess.KING: 50000
 }
 
 
