@@ -1,9 +1,11 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QTextEdit, QPushButton, QFileDialog, QApplication
+from GUI.qt_menu import QtMenuButton
 
-class QtRightSidebar(QFrame):
-    def __init__(self, parent):
+class QtSidebar(QFrame):
+    def __init__(self, parent, main_window):
         QFrame.__init__(self)
         self.parent = parent
+        self.main_window = main_window
 
         layout = QVBoxLayout()
         self.setLayout(layout)
@@ -15,6 +17,8 @@ class QtRightSidebar(QFrame):
         self.fen.setReadOnly(True)
         self.fen.setFixedHeight(100)
 
+        self.info = QLabel("Info")
+        
         self.export_pgn = QPushButton('Export PGN')
         self.export_pgn.clicked.connect(self.export_pgn_clicked)
         self.copy_fen = QPushButton('Copy FEN')
@@ -25,6 +29,8 @@ class QtRightSidebar(QFrame):
         layout.addWidget(QLabel('FEN'))
         layout.addWidget(self.fen)
         layout.addWidget(self.copy_fen)
+        layout.addWidget(QtMenuButton(self.main_window))
+        layout.addWidget(self.info)
 
     def export_pgn_clicked(self):
         pgn = self.parent.game_handler.get_pgn()

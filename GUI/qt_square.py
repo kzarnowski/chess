@@ -19,6 +19,6 @@ class QtSquare(QLabel):
     def mousePressEvent(self, event):
         print(self.r, self.c)
         print("RC2AN:", rc2an((self.r,self.c), self.qt_board.is_flipped))
-        self.qt_board.parent.header.info.setText(f'{self.r}, {self.c}')
+        self.qt_board.parent.qt_sidebar.info.setText(f'{self.r}, {self.c}')
         an = rc2an((self.r,self.c), self.qt_board.is_flipped)
         self.qt_board.click_event(an)

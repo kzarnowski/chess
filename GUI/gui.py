@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QApplication
 from PyQt5.QtCore import QSize, QThreadPool
 
 from GUI.qt_menu import QtMenu
@@ -7,6 +7,7 @@ from GUI.qt_settings import QtSettings
 from GUI.qt_help import QtHelp
 
 WINDOW_SIZE = (1366, 768)
+WINDOW_SIZE = (1000, 800)
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -32,8 +33,16 @@ class Gui(QMainWindow):
 
         self.stack.setCurrentWidget(self.qt_menu)
         self.setCentralWidget(self.stack)
-
+        self.center()
         self.show()
+
+    def center(self):
+        frame_geometry = self.frameGeometry()
+        active_screen = QApplication.desktop().screenNumber(
+            QApplication.desktop().cursor().pos())
+        center_point = QApplication.desktop().screenGeometry(active_screen).center()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
 
     
 

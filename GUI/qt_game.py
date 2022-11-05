@@ -5,26 +5,21 @@ from GUI.sidebars.qt_left_sidebar import QtLeftSidebar
 from GUI.sidebars.qt_right_sidebar import QtRightSidebar
 from GUI.qt_board import QtBoard
 from GUI.qt_header import QtHeader
+from GUI.qt_sidebar import QtSidebar
 
 class QtGame(QFrame):
-    def __init__(self, parent):
+    def __init__(self, main_window):
         QFrame.__init__(self)
-        self.parent = parent
+        self.parent = main_window
         self.game_handler = None
-        self.header = QtHeader(self)
 
-        self.qt_left_sidebar = QtLeftSidebar(self)
         self.qt_board = QtBoard(self)
-        self.qt_right_sidebar = QtRightSidebar(self)
+        self.qt_sidebar = QtSidebar(self, main_window)
 
-        game_layout = QHBoxLayout()
-        game_layout.addWidget(self.qt_left_sidebar, 1)
-        game_layout.addWidget(self.qt_board, 2)
-        game_layout.addWidget(self.qt_right_sidebar, 1)
+        layout = QHBoxLayout()
+        layout.addWidget(self.qt_board, 3)
+        layout.addWidget(self.qt_sidebar, 1)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.header, 1)
-        layout.addLayout(game_layout, 23)
         self.setLayout(layout)
 
         self.threadpool = QThreadPool()
@@ -50,19 +45,19 @@ class QtGame(QFrame):
         return piece
     
     def display_result(self, result):
-        self.header.info.setText(f'Result: {result}')
+        self.qt_sidebar.info.setText(f'Result: {result}')
     
     def update_notation(self, move_san, half_move_num):
         full_move_num = half_move_num // 2 + 1
         is_white_move = not half_move_num % 2
-        current_text = self.qt_right_sidebar.notation.toPlainText()
+        current_text = self.qt_sidebar.notation.toPlainText()
         if is_white_move:
             notation = current_text + str(full_move_num) + '. ' + move_san
         else:
             notation = current_text + ',  ' + move_san + '\n'
-        self.qt_right_sidebar.notation.setText(notation) 
+        self.qt_sidebar.notation.setText(notation) 
     
     def update_fen(self, fen_str):
-        self.qt_right_sidebar.fen.setText(fen_str)
+        self.qt_sidebar.fen.setText(fen_str)
 
     
