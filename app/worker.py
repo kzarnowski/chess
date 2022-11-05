@@ -15,18 +15,17 @@ class Signals(QObject):
     progress = pyqtSignal(str)
 
 class EngineWorker(QRunnable):
-    def __init__(self, engine, board, depth):
+    def __init__(self, engine, board):
         super(EngineWorker, self).__init__()
         
         self.signals = Signals()
         self.engine = engine
         self.board = board 
-        self.depth = depth
 
     @pyqtSlot()
     def run(self):
         try:
-            result = self.engine.get_best_move(self.board, self.depth, self.signals.progress)
+            result = self.engine.get_best_move(self.board, self.signals.progress)
         except:
             traceback.print_exc()
             exctype, value = sys.exc_info()[:2]
