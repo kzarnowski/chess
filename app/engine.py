@@ -6,10 +6,10 @@ import time
 from multiprocessing import Pool, Process, cpu_count, Value
 
 class Engine:
-    def __init__(self, engine_is_white, depth):
+    def __init__(self, is_white, depth):
         self.using_alpha_beta = True
         self.using_move_ordering = True
-        self.engine_is_white = engine_is_white
+        self.is_white = is_white
         self.depth = depth
 
     def get_ordered_moves(self, board: chess.Board):
@@ -21,7 +21,7 @@ class Engine:
         if board_copy.can_claim_draw():
             score = 0.0
         else:
-            score = self.minimax(depth - 1, board_copy, -float("inf"), float("inf"), not self.engine_is_white)
+            score = self.minimax(depth - 1, board_copy, -float("inf"), float("inf"), not self.is_white)
         board_copy.pop()
         #return move, score # when using pool instead of process
         returned_score.value = score
@@ -31,7 +31,7 @@ class Engine:
             moves = self.get_ordered_moves(board)
         else:
             moves = list(board.legal_moves)
-        best_score = -float("inf") if self.engine_is_white else float("inf")
+        best_score = -float("inf") if self.is_white else float("inf")
         best_move = None
 
         args = []
@@ -65,7 +65,7 @@ class Engine:
             process.join()
         print(f'TIME: {time.time() - start_time}')
         scores = [process_score.value for process_score in returned_scores]
-        if self.engine_is_white:
+        if self.is_white:
             return moves[max(range(len(scores)), key=scores.__getitem__)]
         else:
             return moves[min(range(len(scores)), key=scores.__getitem__)]

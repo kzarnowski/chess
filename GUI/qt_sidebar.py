@@ -23,12 +23,19 @@ class QtSidebar(QFrame):
         self.export_pgn.clicked.connect(self.export_pgn_clicked)
         self.copy_fen = QPushButton('Copy FEN')
         self.copy_fen.clicked.connect(self.copy_fen_clicked)
+
+        self.draw = QPushButton('Offer draw')
+        self.draw.clicked.connect(self.draw_clicked)
+        self.resign = QPushButton('Resign')
+        self.resign.clicked.connect(self.resign_clicked)
+
         layout.addWidget(QLabel('PGN'))
         layout.addWidget(self.notation)
         layout.addWidget(self.export_pgn)
         layout.addWidget(QLabel('FEN'))
         layout.addWidget(self.fen)
         layout.addWidget(self.copy_fen)
+        layout.addWidget(self.resign)
         layout.addWidget(QtMenuButton(self.main_window))
         layout.addWidget(self.info)
 
@@ -42,3 +49,9 @@ class QtSidebar(QFrame):
         cb = QApplication.clipboard()
         cb.clear(mode=cb.Clipboard)
         cb.setText(self.fen.toPlainText(), mode=cb.Clipboard)
+    
+    def draw_clicked(self):
+        pass
+
+    def resign_clicked(self):
+        self.parent.game_handler.resign()
