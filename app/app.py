@@ -7,12 +7,11 @@ class App():
         self.gui = None
         self.game = None
         # Init default app settings
-        self.playing_as_white = False
+        self.engine_is_white = True
     
     def new_game(self, qt_game):
-        self.game = GameHandler(qt_game, self.playing_as_white, Engine(not self.playing_as_white, depth=4))
-        qt_game.qt_board.display_starting_position(self.playing_as_white)
-        qt_game.qt_sidebar.notation.setText('')
-        if not self.playing_as_white:
-            self.game.make_engine_move()
+        self.game = GameHandler(qt_game, Engine(self.engine_is_white, depth=4))
+        qt_game.new_game(self.engine_is_white)
+        if self.engine_is_white:
+            self.game.run_engine()
         
