@@ -1,29 +1,46 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QWidget, QGridLayout, QPushButton
 from PyQt5.QtCore import Qt
 from GUI.helpers import an2rc, rc2an, FEN_PIECES
-from GUI.piece import QtPiece
-from GUI.square import QtSquare
-from GUI.promotion_dialog import QtPromotionDialog
+from GUI.qt_piece import QtPiece
+from GUI.qt_square import QtSquare
+from GUI.qt_promotion_dialog import QtPromotionDialog
 
 class QtBoard(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.parent = parent
-        self.is_flipped = True
-
+        self.gui = parent.parent
+        self.is_flipped = False
         self.layout = QGridLayout()
         self.setLayout(self.layout)
         self.layout.setSpacing(0)
         self.pieces = {}
+        self.squares = {}
 
         for r in range(8):
             for c in range(8):
                 square = QtSquare(self, r, c)
                 self.layout.addWidget(square, r, c)
-        
+                self.squares[str(r+c)] = square
+
+    def display_starting_position(self, playing_as_white):
+        self.is_flipped = not playing_as_white
+        self.remove_all_pieces() # remove pieces from previous game   
         starting_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-        fen = 'r2q1nk1/1R2r2p/p2p2pQ/2pP1P1n/N7/P7/3N1PPP/1R4K1 w - - 1 26'
         self.set_position_from_fen(starting_fen)
+
+    def remove_all_pieces(self):
+        for an in list(self.pieces.keys()):
+            self.remove_piece(an)
+
+    def get_squares_color(self):
+        squares_color = {
+            'classic': {
+                'dark': '#b88a4a',
+                'light': '#e3c16f'
+            }
+        }
+        return squares_color[self.gui.theme]
     
     def put_piece(self, symbol, an):
         r, c = an2rc(an, self.is_flipped)
@@ -41,7 +58,6 @@ class QtBoard(QFrame):
             c = 0
             i = 0
             while c < 8:
-                print(r, " ", c)
                 symbol = rows[r][i]
                 if symbol in FEN_PIECES:
                     if self.is_flipped:   
@@ -60,6 +76,9 @@ class QtBoard(QFrame):
         piece.deleteLater()
         del self.pieces[an]
             
+    def click_event(self, an):
+        self.gui.app.game.board_click_event(an)
+    
     def move_was_made(self, an_start, an_end):
         symbol = self.pieces[an_start].symbol
         self.remove_piece(an_start)
@@ -67,9 +86,6 @@ class QtBoard(QFrame):
             self.remove_piece(an_end)
         self.put_piece(symbol, an_end)
     
-    def click_event(self, an):
-        self.parent.parent.app.click_event(an)
-
     def kingside_castle(self, is_white):
         if is_white:
             self.remove_piece('e1')
@@ -107,9 +123,18 @@ class QtBoard(QFrame):
         self.put_piece(new_piece_symbol, an)
 
     def get_promotion_piece(self, is_white):
-        dialog = QtPromotionDialog(is_white)
+        dialog = QtPromotionDialog(is_white, self.get_squares_color()['light'])
         option = dialog.exec()
         symbol = chr(option)
         print(symbol)
         return symbol
+
+    def display_highlight_at_active_square(self, an):
+        r, c = an2rc(an, self.is_flipped)
+        active_square = self.squares[str(r+c)]
+        active_square.set_color('#9e9897')
+
+    def get_square_from_an(self, an):
+        pass
+
         

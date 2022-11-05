@@ -4,11 +4,10 @@ import string
 FEN_PIECES = 'rnbqkpRNBQKP'
 
 def get_piece_png_path(fen):
-    from GUI.config import theme
     root = os.path.join('images', 'pieces')
     color = 'w' if fen.isupper() else 'b'
     piece = fen.lower()
-    return os.path.join(root, theme, color+piece)
+    return os.path.join(root, color+piece)
 
 def an2rc(an, is_flipped):
     """ Convert algebraic notation (a8, c7) to a (r,c) pair """

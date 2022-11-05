@@ -1,11 +1,13 @@
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget
-from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QApplication
+from PyQt5.QtCore import QSize, QThreadPool
 
-from GUI.config import WINDOW_SIZE
-from GUI.menu import QtMenu
-from GUI.play import QtPlay
-from GUI.settings import QtSettings
-from GUI.help import QtHelp
+from GUI.qt_menu import QtMenu
+from GUI.qt_game import QtGame
+from GUI.qt_settings import QtSettings
+from GUI.qt_help import QtHelp
+
+WINDOW_SIZE = (1366, 768)
+WINDOW_SIZE = (1000, 800)
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -14,19 +16,34 @@ class Gui(QMainWindow):
         self.setFixedSize(QSize(*WINDOW_SIZE))
         self.setWindowTitle('Chess')
 
+        # Init gui settings
+        self.theme = 'classic'
+
         self.stack = QStackedWidget(self)
 
-        self.menu = QtMenu(self)
-        self.play = QtPlay(self)
-        self.settings = QtSettings(self)
-        self.help = QtHelp(self)
+        self.qt_menu = QtMenu(self)
+        self.qt_game = QtGame(self)
+        self.qt_settings = QtSettings(self)
+        self.qt_help = QtHelp(self)
 
-        self.stack.insertWidget(0, self.menu)
-        self.stack.insertWidget(1, self.play)
-        self.stack.insertWidget(2, self.settings)
-        self.stack.insertWidget(3, self.help)
+        self.stack.insertWidget(0, self.qt_menu)
+        self.stack.insertWidget(1, self.qt_game)
+        self.stack.insertWidget(2, self.qt_settings)
+        self.stack.insertWidget(3, self.qt_help)
 
-        self.stack.setCurrentWidget(self.menu)
-
+        self.stack.setCurrentWidget(self.qt_menu)
         self.setCentralWidget(self.stack)
+        self.center()
         self.show()
+
+    def center(self):
+        frame_geometry = self.frameGeometry()
+        active_screen = QApplication.desktop().screenNumber(
+            QApplication.desktop().cursor().pos())
+        center_point = QApplication.desktop().screenGeometry(active_screen).center()
+        frame_geometry.moveCenter(center_point)
+        self.move(frame_geometry.topLeft())
+
+    
+
+    
