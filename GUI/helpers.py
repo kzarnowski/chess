@@ -28,3 +28,117 @@ def rc2an(rc, is_flipped):
         rank = str(8 - rc[0])
         file = chr(rc[1] + 97)
     return file + rank
+
+
+LANG = {
+    'game': {
+        'export_pgn': {
+            'EN': 'Export PGN',
+            'PL': 'Zapisz PGN'
+        },
+        'copy_fen': {
+            'EN': 'Copy FEN',
+            'PL': 'Kopiuj FEN'
+        },
+        'resign': {
+            'EN': 'Resign',
+            'PL': 'Poddaj się'
+        },
+        'menu': {
+            'EN': 'Menu',
+            'PL': 'Menu'
+        },
+        'your_turn': {
+            'EN': 'Your turn',
+            'PL': 'Twój ruch'
+        },
+        'engine_turn': {
+            'EN': 'Computer is thinking...',
+            'PL': 'Komputer myśli...'
+        },
+        'result': {
+            'EN': 'Result',
+            'PL': 'Wynik'
+        }
+    },
+    'menu': {
+        'new_game': {
+            'EN': 'New Game',
+            'PL': 'Nowa Gra'
+        },
+        'settings': {
+            'EN': 'Settings',
+            'PL': 'Opcje'
+        },
+        'exit': {
+            'EN': 'Exit',
+            'PL': 'Zamknij'
+        }
+    },
+    'settings': {
+        'play_as': {
+            'title': {
+                'EN': 'Play as:',
+                'PL': 'Graj jako:'
+            },
+            'random': {
+                'EN': 'Random',
+                'PL': 'Losowo'
+            },
+            'white': {
+                'EN': 'White',
+                'PL': 'Białe'
+            },
+            'black': {
+                'EN': 'Black',
+                'PL': 'Czarne'
+            },
+        },
+        'language': {
+            'title': {
+                'EN': 'Choose language:',
+                'PL': 'Wybierz język:'
+            },
+            'english': {
+                'EN': 'English',
+                'PL': 'angielski'
+            },
+            'polish': {
+                'EN': 'Polish',
+                'PL': 'polski'
+            }
+        },
+        'board_color': {
+            'title': {
+                'EN': 'Board color:',
+                'PL': 'Kolor szachownicy:'
+            }
+        },
+        'engine_level': {
+            'title': {
+                'EN': 'Engine level',
+                'PL': 'Poziom silnika'
+            },
+            'easy': {
+                'EN': 'Easy',
+                'PL': 'Łatwy'
+            },
+            'medium': {
+                'EN': 'Medium',
+                'PL': 'Średni'
+            },
+            'hard': {
+                'EN': 'Hard',
+                'PL': 'Trudny'
+            }
+        },
+        'save': {
+            'EN': 'Save',
+            'PL': 'Zapisz'
+        },
+        'cancel': {
+            'EN': 'Cancel',
+            'PL': 'Anuluj'
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import chess
 from random import choice
-from app.evaluation import evaluate_board
+from app.evaluation import get_board_score, is_endgame, get_move_score
 import time
 
 from multiprocessing import Pool, Process, cpu_count, Value
@@ -13,7 +13,9 @@ class Engine:
         self.depth = depth
 
     def get_ordered_moves(self, board: chess.Board):
-        return list(board.legal_moves)
+        endgame = is_endgame(board)
+        ordered_moves = sorted(board.legal_moves, key=lambda move: get_move_score(board, move, endgame), reverse=board.turn == chess.WHITE)
+        return ordered_moves
 
     def run_minimax(self, board, depth, move, returned_score):
         board_copy = board.copy()
@@ -76,7 +78,7 @@ class Engine:
         elif board.is_game_over():
             return 0
         if depth == 0:
-            return evaluate_board(board)
+            return get_board_score(board)
 
         best_score = -float('inf') if engine_is_white else float('inf')
         if self.using_move_ordering:

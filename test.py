@@ -1,37 +1,36 @@
-from PyQt5 import QtWidgets
-from multiprocessing import Pool, cpu_count
+import sys
+
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 
 
-def run(move, board, depth):
-    print(move, ' ', board, ' ', depth)
-    return move*2
+# Subclass QMainWindow to customize your application's main window
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-if __name__ == "__main__":
-    processes = cpu_count()
-    board = 20
-    depth = 30
-    with Pool(processes=processes) as p:
-        res = p.starmap(run, [
-            (1, board, depth),
-            (2, board, depth),
-            (3, board, depth),
-            (4, board, depth),
-            (5, board, depth),
-            (6, board, depth),
-            (7, board, depth),
-            (8, board, depth),
-        ])
-        print(res)
+        self.setWindowTitle("My App")
+        button = QPushButton("Press Me!")
 
-    args = [(1, board, depth),
-            (2, board, depth),
-            (3, board, depth),
-            (4, board, depth),
-            (5, board, depth),
-            (6, board, depth),
-            (7, board, depth),
-            (8, board, depth)]
-    
-    for x, y, z in args:
-        print(x, y, z)
-    
+        # Set the central widget of the Window.
+        self.setCentralWidget(button)
+
+    def keyPressEvent(self, event) -> None:
+        key = event.key()
+
+        if key == Qt.Key_P:
+            print("P CLICKED")
+        elif key == Qt.Key_X:
+            print("X Clicked")
+        elif key == Qt.Key_Left:
+            print("Left")
+        else:
+            print("Other clicked")
+
+
+app = QApplication(sys.argv)
+
+window = MainWindow()
+window.show()
+
+app.exec()
