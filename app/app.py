@@ -10,7 +10,7 @@ class App():
         self.engine_is_white = False
     
     def new_game(self, qt_game):
-        self.game = GameHandler(qt_game, Engine(self.engine_is_white, depth=4))
+        self.game = GameHandler(qt_game, Engine(self.engine_is_white, depth=6))
         qt_game.new_game(self.engine_is_white)
         if self.engine_is_white:
             self.game.run_engine()

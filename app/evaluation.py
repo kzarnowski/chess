@@ -3,6 +3,7 @@ import numpy as np
 
 
 MAX_VALUE = 50000
+CHECKMATE_VALUE = 1000000000
 
 """ https://www.chessprogramming.org/Point_Value - Larry Kaufman"""
 PIECE_VALUES = {
@@ -126,24 +127,50 @@ def get_board_score(board: chess.Board):
         value = PIECE_VALUES[piece.piece_type]
         value += get_piece_position_score(piece, square, endgame)
         score += value if piece.color == chess.WHITE else -value       
-    return score
+    return float(score)
+
+
+def is_attacked_by_pawn(board: chess.Board, square: chess.Square, attacker_color: chess.Color):
+    attackers = board.attackers(attacker_color, square)
+    for attacker in attackers:
+        if board.piece_type_at(attacker) == chess.PAWN:
+            return True
+    return False
 
 
 def get_move_score(board: chess.Board, move: chess.Move, endgame):
     side = 1 if board.turn == chess.WHITE else -1
     if move.promotion:
-        return MAX_VALUE * side
+        return side * MAX_VALUE
+    
+    if not endgame and board.is_castling(move):
+        return side * 0.9 * chess.PAWN 
 
+    # prioritise moves to better squares based on position tables
     piece = board.piece_at(move.from_square)
     start_value = get_piece_position_score(piece, move.from_square, endgame)
     end_value = get_piece_position_score(piece, move.to_square, endgame)
     square_change = end_value - start_value
 
+    # check difference between piece values when capturing
     capture_change = 0
     if board.is_capture(move):
         capture_change = get_capture_score(board, move)
     
-    move_evaluation = (square_change + capture_change) * side
+    # penalize moves to a square attacked by less valuable piece
+    attackers_change = 0
+    if piece.piece_type != chess.PAWN and board.is_attacked_by(not board.turn, move.to_square):
+        attackers = [board.piece_at(square) for square in board.attackers(not board.turn, move.to_square)]
+        lowest_attacker_value = 0
+        for attacker in attackers:
+            if attacker.piece_type == chess.PAWN:
+                lowest_attacker_value = PIECE_VALUES[chess.PAWN]
+                break
+            lowest_attacker_value = min(lowest_attacker_value, PIECE_VALUES[attacker.piece_type])
+        if lowest_attacker_value > PIECE_VALUES[piece.piece_type]:
+            attackers_change = lowest_attacker_value - PIECE_VALUES[piece.piece_type]
+
+    move_evaluation = (square_change + capture_change + attackers_change) * side
     return move_evaluation
 
 def get_piece_position_score(piece: chess.Piece, square: chess.Square, endgame: bool):
@@ -169,6 +196,7 @@ def get_capture_score(board: chess.Board, move: chess.Move):
         return PIECE_VALUES[chess.PAWN]
     move_piece = board.piece_at(move.from_square)
     captured_piece = board.piece_at(move.to_square)
-    captured_piece_score = PIECE_VALUES[captured_piece.piece_type] + get_piece_position_score(captured_piece, move.to_square, False)
-    capture_evaluation = PIECE_VALUES[move_piece.piece_type] - captured_piece_score
+    capture_evaluation = PIECE_VALUES[captured_piece.piece_type] + get_piece_position_score(captured_piece, move.to_square, False)
+    if board.is_attacked_by(not board.turn, move.to_square):
+        capture_evaluation -= PIECE_VALUES[move_piece.piece_type]
     return capture_evaluation
