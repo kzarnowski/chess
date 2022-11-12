@@ -73,13 +73,9 @@ class QtSettings(QFrame):
 
         button_height = self.parent.frameGeometry().height() / 10
         self.save_btn = QPushButton('Save')
-        self.save_btn.setFixedHeight(button_height)
+        self.save_btn.setFixedSize(self.parent.frameGeometry().width() / 2, button_height)
         self.save_btn.clicked.connect(self.save)
-        self.cancel_btn = QPushButton('Cancel')
-        self.cancel_btn.setFixedHeight(button_height)
-        self.cancel_btn.clicked.connect(self.cancel)
         buttons.addWidget(self.save_btn)
-        buttons.addWidget(self.cancel_btn)
     
     def get_current_lang(self):
         """ Get current language from settings, default: EN """

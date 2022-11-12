@@ -1,36 +1,12 @@
-import sys
+from app.engine import Engine
+import chess
 
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+engine = Engine(False, 6)
+progress = ''
+board = chess.Board()
+board.set_fen('r3k2r/p1ppqp2/1n2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R b - - 0 1')
+print(board)
 
-
-# Subclass QMainWindow to customize your application's main window
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("My App")
-        button = QPushButton("Press Me!")
-
-        # Set the central widget of the Window.
-        self.setCentralWidget(button)
-
-    def keyPressEvent(self, event) -> None:
-        key = event.key()
-
-        if key == Qt.Key_P:
-            print("P CLICKED")
-        elif key == Qt.Key_X:
-            print("X Clicked")
-        elif key == Qt.Key_Left:
-            print("Left")
-        else:
-            print("Other clicked")
-
-
-app = QApplication(sys.argv)
-
-window = MainWindow()
-window.show()
-
-app.exec()
+move1 = engine.get_best_move(board, progress)
+print(move1)
+board.push(move1)

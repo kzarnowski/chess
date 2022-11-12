@@ -18,6 +18,8 @@ class Engine:
         self.count = 0
         self.history = {}
 
+        self.best_move = None
+
     def get_ordered_moves(self, board: chess.Board, captures_only):
         endgame = is_endgame(board)
 
@@ -39,6 +41,7 @@ class Engine:
         }
         start_time = time.time()
         res =  self.minimax(self.depth, board, -float("inf"), float("inf"), self.is_white)[0]
+        # res =  self.negamax(self.depth, board, -float("inf"), float("inf"))[0]
         print('Evaluated: ', self.count, f'TIME: {time.time() - start_time}')
         return res
 
@@ -50,14 +53,34 @@ class Engine:
             self.count += 1
             return 0
         
-        # TODO: eval position without captures
-        # score = get_board_score(board)
-        # if score >= beta:
-        #     return beta
-        # alpha = max(score, alpha)
-        
+        self.count += 1
+        best_score = get_board_score(board)
+        if engine_is_white:
+            alpha = max(alpha, best_score)
+        else:
+            beta = min(beta, best_score)
+        if self.using_alpha_beta and alpha >= beta:
+            return best_score
 
-
+        if self.using_move_ordering:
+            moves = self.get_ordered_moves(board, captures_only=True)
+        else:
+            moves = list(board.generate_legal_captures())
+        if len(moves) == 0:
+            print(board.fen())
+        for move in moves:
+            board.push(move)
+            score = self.search_captures(board, alpha, beta, not engine_is_white)
+            board.pop()
+            if engine_is_white:
+                best_score = max(score, best_score)
+                alpha = max(alpha, best_score)
+            else:
+                best_score = min(score, best_score)
+                beta = min(beta, best_score)
+            if self.using_alpha_beta and alpha >= beta:
+                break
+        return best_score
 
     def minimax(self, depth, board: chess.Board, alpha, beta, engine_is_white):
         if board.is_checkmate():
@@ -67,10 +90,8 @@ class Engine:
             self.count += 1
             return 0
         if depth == 0:
-            self.count += 1
-            return get_board_score(board)
+            #return get_board_score(board)
             return self.search_captures(board, alpha, beta, not engine_is_white)
-            #return self.minimax(depth - 1, board, alpha, beta, not engine_is_white)
 
         best_score = -float('inf') if engine_is_white else float('inf')
         best_move = None
