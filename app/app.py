@@ -7,7 +7,7 @@ class App():
         self.gui = None
         self.game = None
         # Init default app settings
-        self.engine_is_white = True
+        self.engine_is_white = False
     
     def new_game(self, qt_game):
         self.game = GameHandler(qt_game, Engine(self.engine_is_white, depth=4))

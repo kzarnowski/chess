@@ -1,3 +1,4 @@
 .vscode/*
 venv/*
 *.pgn
+.DS_Store

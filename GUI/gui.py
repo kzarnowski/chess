@@ -6,7 +6,6 @@ from GUI.qt_game import QtGame
 from GUI.qt_settings import QtSettings
 from GUI.qt_help import QtHelp
 
-WINDOW_SIZE = (1366, 768)
 WINDOW_SIZE = (1000, 800)
 
 class Gui(QMainWindow):
@@ -18,7 +17,7 @@ class Gui(QMainWindow):
 
         # Init gui settings
         self.theme = 'classic'
-
+        self.setStyleSheet('QtMenu, QtHelp, QtGame, QtSettings {background-image : url(images/background.jpg);}')
         self.stack = QStackedWidget(self)
 
         self.qt_menu = QtMenu(self)

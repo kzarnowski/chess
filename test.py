@@ -1,37 +1,12 @@
-from PyQt5 import QtWidgets
-from multiprocessing import Pool, cpu_count
+from app.engine import Engine
+import chess
 
+engine = Engine(False, 6)
+progress = ''
+board = chess.Board()
+board.set_fen('r3k2r/p1ppqp2/1n2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R b - - 0 1')
+print(board)
 
-def run(move, board, depth):
-    print(move, ' ', board, ' ', depth)
-    return move*2
-
-if __name__ == "__main__":
-    processes = cpu_count()
-    board = 20
-    depth = 30
-    with Pool(processes=processes) as p:
-        res = p.starmap(run, [
-            (1, board, depth),
-            (2, board, depth),
-            (3, board, depth),
-            (4, board, depth),
-            (5, board, depth),
-            (6, board, depth),
-            (7, board, depth),
-            (8, board, depth),
-        ])
-        print(res)
-
-    args = [(1, board, depth),
-            (2, board, depth),
-            (3, board, depth),
-            (4, board, depth),
-            (5, board, depth),
-            (6, board, depth),
-            (7, board, depth),
-            (8, board, depth)]
-    
-    for x, y, z in args:
-        print(x, y, z)
-    
+move1 = engine.get_best_move(board, progress)
+print(move1)
+board.push(move1)

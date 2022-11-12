@@ -1,9 +1,12 @@
 import chess
 from random import choice
-from app.evaluation import evaluate_board
+from app.evaluation import get_board_score, is_endgame, get_move_score
 import time
+from collections import defaultdict
 
 from multiprocessing import Pool, Process, cpu_count, Value
+
+MAX_SCORE = 1000000000
 
 class Engine:
     def __init__(self, is_white, depth):
@@ -12,75 +15,88 @@ class Engine:
         self.is_white = is_white
         self.depth = depth
 
-    def get_ordered_moves(self, board: chess.Board):
-        return list(board.legal_moves)
+        self.count = 0
+        self.history = {}
 
-    def run_minimax(self, board, depth, move, returned_score):
-        board_copy = board.copy()
-        board_copy.push(move)
-        if board_copy.can_claim_draw():
-            score = 0.0
-        else:
-            score = self.minimax(depth - 1, board_copy, -float("inf"), float("inf"), not self.is_white)
-        board_copy.pop()
-        #return move, score # when using pool instead of process
-        returned_score.value = score
+        self.best_move = None
+
+    def get_ordered_moves(self, board: chess.Board, captures_only):
+        endgame = is_endgame(board)
+
+        def order(move):
+            side = 1 if board.turn == chess.WHITE else -1
+            history_score = side * self.history[board.turn][move.uci()]
+            return get_move_score(board, move, endgame) + history_score
+
+        moves = board.generate_legal_captures() if captures_only else board.legal_moves
+        ordered_moves = sorted(moves, key=order, reverse=board.turn == chess.WHITE)
+        return ordered_moves
+
 
     def get_best_move(self, board: chess.Board, progress):
-        if self.using_move_ordering:
-            moves = self.get_ordered_moves(board)
-        else:
-            moves = list(board.legal_moves)
-        best_score = -float("inf") if self.is_white else float("inf")
-        best_move = None
-
-        args = []
-        for move in moves:
-            args.append((board, self.depth, move))
-
-        """ Pool """
-        # start_time = time.time()
-        # with Pool(processes=cpu_count()) as p:
-        #     res = p.starmap(self.run_minimax, args)
-        # for move, score in res:
-        #     if self.engine_is_white and score >= best_score:
-        #         best_score = score
-        #         best_move = move
-        #     elif not self.engine_is_white and score <= best_score:
-        #         best_score = score
-        #         best_move = move
-        # print(f'TIME: {time.time() - start_time}')
-        # return best_move
-        """ Process """
-        processes = []
-        returned_scores = []
+        self.count = 0
+        self.history = {
+            chess.WHITE: defaultdict(int),
+            chess.BLACK: defaultdict(int)
+        }
         start_time = time.time()
-        for move in moves:
-            process_score = Value('d', 0.0)
-            returned_scores.append(process_score)
-            p = Process(target=self.run_minimax, args=(board, self.depth, move, process_score))
-            processes.append(p)
-            p.start()
-        for process in processes:
-            process.join()
-        print(f'TIME: {time.time() - start_time}')
-        scores = [process_score.value for process_score in returned_scores]
-        if self.is_white:
-            return moves[max(range(len(scores)), key=scores.__getitem__)]
+        res =  self.minimax(self.depth, board, -float("inf"), float("inf"), self.is_white)[0]
+        # res =  self.negamax(self.depth, board, -float("inf"), float("inf"))[0]
+        print('Evaluated: ', self.count, f'TIME: {time.time() - start_time}')
+        return res
+
+    def search_captures(self, board: chess.Board, alpha, beta, engine_is_white):
+        if board.is_checkmate():
+            self.count += 1
+            return -MAX_SCORE if engine_is_white else MAX_SCORE
+        elif board.is_game_over():
+            self.count += 1
+            return 0
+        
+        self.count += 1
+        best_score = get_board_score(board)
+        if engine_is_white:
+            alpha = max(alpha, best_score)
         else:
-            return moves[min(range(len(scores)), key=scores.__getitem__)]
+            beta = min(beta, best_score)
+        if self.using_alpha_beta and alpha >= beta:
+            return best_score
+
+        if self.using_move_ordering:
+            moves = self.get_ordered_moves(board, captures_only=True)
+        else:
+            moves = list(board.generate_legal_captures())
+        if len(moves) == 0:
+            print(board.fen())
+        for move in moves:
+            board.push(move)
+            score = self.search_captures(board, alpha, beta, not engine_is_white)
+            board.pop()
+            if engine_is_white:
+                best_score = max(score, best_score)
+                alpha = max(alpha, best_score)
+            else:
+                best_score = min(score, best_score)
+                beta = min(beta, best_score)
+            if self.using_alpha_beta and alpha >= beta:
+                break
+        return best_score
 
     def minimax(self, depth, board: chess.Board, alpha, beta, engine_is_white):
         if board.is_checkmate():
-            return -1000000000 if engine_is_white else 1000000000
+            self.count += 1
+            return -MAX_SCORE if engine_is_white else MAX_SCORE
         elif board.is_game_over():
+            self.count += 1
             return 0
         if depth == 0:
-            return evaluate_board(board)
+            #return get_board_score(board)
+            return self.search_captures(board, alpha, beta, not engine_is_white)
 
         best_score = -float('inf') if engine_is_white else float('inf')
+        best_move = None
         if self.using_move_ordering:
-            moves = self.get_ordered_moves(board)
+            moves = self.get_ordered_moves(board, captures_only=False)
         else:
             moves = list(board.legal_moves)
         for move in moves:
@@ -88,11 +104,21 @@ class Engine:
             score = self.minimax(depth - 1, board, alpha, beta, not engine_is_white)
             board.pop()
             if engine_is_white:
-                best_score = max(best_score, score)
+                if score > best_score:
+                    best_score = score
+                    best_move = move
                 alpha = max(alpha, best_score)
             else:
-                best_score = min(best_score, score)
+                if score < best_score:
+                    best_score = score
+                    best_move = move
                 beta = min(beta, best_score)
-            if self.using_alpha_beta and beta <= alpha:
-                return best_score
-        return best_score
+            if self.using_alpha_beta and alpha >= beta:
+                if not board.is_capture(move):
+                    self.history[board.turn][move.uci()] += depth ** 2
+                break
+        if depth == self.depth:
+            return best_move, best_score
+        else:
+            return best_score
+

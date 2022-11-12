@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap, QIcon, QFont, QColor
 from GUI.helpers import get_piece_png_path, rc2an
 
-SIZE = 75
+SIZE = 80
 
 class QtPiece(QLabel):
     def __init__(self, qt_board, r, c, symbol):
@@ -14,6 +14,7 @@ class QtPiece(QLabel):
         self.symbol = symbol
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.size = qt_board.width() / 8
+        #pixmap = QIcon(get_piece_png_path(self.symbol)).pixmap(QSize(SIZE, SIZE))
         pixmap = QIcon(get_piece_png_path(self.symbol)).pixmap(QSize(SIZE, SIZE))
         self.setPixmap(pixmap)
 
