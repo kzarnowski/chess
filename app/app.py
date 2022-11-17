@@ -1,12 +1,14 @@
 import chess
 from app.game_handler import GameHandler
 from app.engine import Engine
+from app.analysis_handler import AnalysisHandler
 from random import uniform
 
 class App():
     def __init__(self):
         self.gui = None
         self.game = None
+        self.analysis = None
     
     def new_game(self, qt_game):
         current_settings = self.gui.qt_settings.get_current_settings()
@@ -20,9 +22,11 @@ class App():
     
     def new_analysis(self, qt_analysis):
         #TODO: engine_is_white: change based on pgn file
+
         current_settings = self.gui.qt_settings.get_current_settings()
         engine_is_white = self.is_engine_white(current_settings)
         qt_analysis.new_analysis(engine_is_white, current_settings['board_color'])
+        self.analysis = AnalysisHandler(qt_analysis, Engine(engine_is_white, current_settings))
 
     def is_engine_white(self, current_settings):
         engine_is_white = None

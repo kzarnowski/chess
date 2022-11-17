@@ -35,6 +35,7 @@ class QtSidebar(QFrame):
         layout.addWidget(QLabel('FEN'))
         layout.addWidget(self.fen)
         layout.addWidget(self.copy_fen)
+        layout.addWidget(self.draw)
         layout.addWidget(self.resign)
         layout.addWidget(QtMenuButton(self.main_window))
         layout.addWidget(self.info)
