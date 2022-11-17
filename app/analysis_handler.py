@@ -34,17 +34,21 @@ class AnalysisHandler(BoardHandler):
         pass
 
     def handle_previous_move(self):
-        if self.move_num == 0:
-            self.qt_analysis.set_info('Start of games')
+        if not self.moves:
             return
+        if self.move_num == 0:
+            self.qt_analysis.set_info('Start of game')
+            return
+        self.board.pop()
+        self.qt_analysis.qt_board.set_position_from_fen(self.board.fen())
         self.move_num -= 1
-        move = self.moves[self.move_num]
 
     def handle_next_move(self):
+        if not self.moves:
+            return
         if self.move_num >= len(self.moves):
             self.qt_analysis.set_info('End of game')
             return
-        
         move = self.moves[self.move_num]
         self.handle_engine_move(move)
         self.move_num += 1

@@ -22,6 +22,9 @@ class QtAnalysis(QFrame):
         self.qt_board.set_squares_color(board_color_num)
         self.qt_board.display_starting_position(engine_is_white)
         self.qt_board.setEnabled(True)
+        self.qt_sidebar.notation.setText('')
+        self.qt_sidebar.fen.setText('')
+        self.set_info('New analysis')
     
     def get_handler(self):
         return self.analysis_handler

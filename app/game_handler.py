@@ -65,9 +65,11 @@ class GameHandler(BoardHandler):
             self.qt_game.display_result(outcome.result())
         else:
             self.qt_game.set_info('Your turn')
+            self.qt_game.set_controls_enabled(True)
 
 
     def run_engine(self):
+        self.qt_game.set_controls_enabled(False)
         self.qt_game.set_info('Computer is thinking ⏳')
         worker = self.get_worker()
         self.qt_game.threadpool.start(worker)
@@ -96,5 +98,12 @@ class GameHandler(BoardHandler):
         pgn.headers['White'] = 'Computer' if self.engine.is_white else 'User'
         pgn.headers['Black'] = 'User' if self.engine.is_white else 'Computer'
         return pgn
+
+    def handle_undo_move(self):
+        if self.board.ply() < 2:
+            return
+        self.board.pop()
+        self.board.pop()
+        self.qt_game.qt_board.set_position_from_fen(self.board.fen())
 
 

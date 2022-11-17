@@ -25,6 +25,7 @@ class QtGame(QFrame):
         self.qt_board.display_starting_position(engine_is_white)
         self.qt_board.setEnabled(True)
         self.qt_sidebar.notation.setText('')
+        self.set_info('New Game')
 
     def get_promotion_piece(self, is_white):
         piece = self.qt_board.get_promotion_piece(is_white)
@@ -52,5 +53,10 @@ class QtGame(QFrame):
     
     def get_handler(self):
         return self.game_handler
+
+    def set_controls_enabled(self, is_enabled):
+        self.qt_sidebar.undo.setEnabled(is_enabled)
+        self.qt_sidebar.resign.setEnabled(is_enabled)
+        self.qt_sidebar.draw.setEnabled(is_enabled)
 
     

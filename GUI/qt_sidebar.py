@@ -28,7 +28,8 @@ class QtSidebar(QFrame):
         self.draw.clicked.connect(self.draw_clicked)
         self.resign = QPushButton('Resign')
         self.resign.clicked.connect(self.resign_clicked)
-
+        self.undo = QPushButton('Undo move')
+        self.undo.clicked.connect(self.undo_clicked)
         layout.addWidget(QLabel('PGN'))
         layout.addWidget(self.notation)
         layout.addWidget(self.export_pgn)
@@ -37,11 +38,12 @@ class QtSidebar(QFrame):
         layout.addWidget(self.copy_fen)
         layout.addWidget(self.draw)
         layout.addWidget(self.resign)
+        layout.addWidget(self.undo)
         layout.addWidget(QtMenuButton(self.main_window))
         layout.addWidget(self.info)
 
     def export_pgn_clicked(self):
-        pgn = self.parent.game_handler.get_pgn()
+        pgn = self.parent.get_handler().get_pgn()
         filename = QFileDialog.getSaveFileName(filter='(*.pgn)')[0]
         if filename:
             print(pgn, file=open(filename, "w"), end="\n\n")
@@ -55,4 +57,7 @@ class QtSidebar(QFrame):
         pass
 
     def resign_clicked(self):
-        self.parent.game_handler.resign()
+        self.parent.get_handler().resign()
+    
+    def undo_clicked(self):
+        self.parent.get_handler().handle_undo_move()

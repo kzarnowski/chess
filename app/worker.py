@@ -1,8 +1,3 @@
-"""
-Kod ponizszego pliku został zaczerpnięty z:
-https://www.pythonguis.com/tutorials/multithreading-pyqt-applications-qthreadpool/
-"""
-
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QRunnable
 from chess import Move
 import traceback
@@ -25,7 +20,7 @@ class EngineWorker(QRunnable):
     @pyqtSlot()
     def run(self):
         try:
-            result = self.engine.get_best_move(self.board, self.signals.progress)
+            result = self.engine.get_best_move(self.board.copy(), self.signals.progress)
         except:
             traceback.print_exc()
             exctype, value = sys.exc_info()[:2]
