@@ -25,7 +25,10 @@ class QtAnalysisSidebar(QFrame):
 
         buttons = QHBoxLayout()
         previous_move = QPushButton('←')
+        previous_move.clicked.connect(self.previous_move_clicked)
         next_move = QPushButton('→')
+        next_move.clicked.connect(self.next_move_clicked)
+
         buttons.addWidget(previous_move)
         buttons.addWidget(next_move)
 
@@ -50,3 +53,9 @@ class QtAnalysisSidebar(QFrame):
         filename = dialog.getOpenFileName(filter='(*.pgn)')[0]
         if filename:
             self.parent.analysis_handler.import_pgn(filename)
+    
+    def next_move_clicked(self):
+        self.parent.get_handler().handle_next_move()
+
+    def previous_move_clicked(self):
+        self.parent.get_handler().handle_previous_move()

@@ -62,7 +62,7 @@ class QtSettings(QFrame):
         color1 = QRadioButton('Color 1')
         color2 = QRadioButton('Color 2')
         color3 = QRadioButton('Color 3')
-        color1.setChecked(True)
+        color3.setChecked(True)
         self.color_buttons.addButton(color1)
         self.color_buttons.addButton(color2)
         self.color_buttons.addButton(color3)

@@ -20,6 +20,6 @@ class QtPiece(QLabel):
 
     def mousePressEvent(self, event):
         print(self.r, self.c)
-        self.qt_board.parent.qt_sidebar.info.setText(f'{self.r}, {self.c}')
+        self.qt_board.parent.qt_sidebar.info.setText(rc2an((self.r,self.c), self.qt_board.is_flipped))
         an = rc2an((self.r,self.c), self.qt_board.is_flipped)
         self.qt_board.click_event(an)

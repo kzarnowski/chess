@@ -49,5 +49,8 @@ class QtGame(QFrame):
 
     def set_info(self, info):
         self.qt_sidebar.info.setText(info)
+    
+    def get_handler(self):
+        return self.game_handler
 
     

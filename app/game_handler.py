@@ -73,13 +73,6 @@ class GameHandler(BoardHandler):
         self.qt_game.threadpool.start(worker)
 
 
-    def is_promotion(self, move: chess.Move):  
-        promotion_uci = move.uci() + 'q'
-        is_user_promotion = chess.Move.from_uci(promotion_uci) in self.board.legal_moves
-        is_engine_promotion = len(move.uci()) == 5 and move in self.board.legal_moves
-        return is_user_promotion or is_engine_promotion
-
-
     def update_sidebars(self, move: chess.Move):
         move_san = self.board.san(move)
         half_move_num = self.board.ply()

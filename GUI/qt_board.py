@@ -61,6 +61,7 @@ class QtBoard(QFrame):
         #print("PUT PIECE: ", symbol, " ", r, " ", c, " ", square)
     
     def set_position_from_fen(self, fen):
+        self.remove_all_pieces() # remove pieces from previous game  
         fen = fen.split()[0]
         rows = fen.split('/')
 
@@ -88,7 +89,8 @@ class QtBoard(QFrame):
         del self.pieces[an]
             
     def click_event(self, an):
-        self.gui.app.game.handle_board_click_event(an)
+        self.parent.get_handler().handle_board_click_event(an)
+        #self.gui.app.game.handle_board_click_event(an)
     
     def display_standard_move(self, an_start, an_end):
         symbol = self.pieces[an_start].symbol
