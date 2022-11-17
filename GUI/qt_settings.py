@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QRadioButton, QButtonGroup, QCheckBox
-from GUI.qt_menu import QtMenuButton
-from GUI.qt_header import QtHeader
+from PyQt5.QtGui import QFont
 
 class QtSettings(QFrame):
     def __init__(self, parent):
@@ -16,14 +15,30 @@ class QtSettings(QFrame):
         layout.addLayout(dashboard, 9)
         layout.addLayout(buttons, 1)
 
-
         options = QVBoxLayout()
+        options.setContentsMargins(50, 50, 0, 50)
         help = QVBoxLayout()
+        help.setContentsMargins(0, 50, 0, 50)
 
-        dashboard.addLayout(options)
-        dashboard.addLayout(help)
+        header_font = QFont()
+        header_font.setPointSize(25)
+        help_header = QLabel('Help')
+        help_header.setFont(header_font)
+        help_text = QLabel()
+        help_text.setFixedSize(600, 515)
+        with open('help.txt', 'r') as file:
+            help_text.setText(file.read())
+
+        dashboard.addLayout(options, 1)
+        dashboard.addLayout(help, 2)
+
+        help.addWidget(help_header)
+        help.addWidget(help_text)
         
-        options.addWidget(QLabel('User settings'))
+        user_settings_label = QLabel('User settings')
+        user_settings_label.setFixedHeight(50)
+        user_settings_label.setFont(header_font)
+        options.addWidget(user_settings_label)
 
         self.play_buttons = QButtonGroup(self)
         play_white = QRadioButton('White')
@@ -31,7 +46,7 @@ class QtSettings(QFrame):
         play_random = QRadioButton('Random')
         play_random.setChecked(True)
         play_label = QLabel('Play as:')
-        play_label.setFixedHeight(50)
+        play_label.setFixedHeight(20)
         options.addWidget(play_label)
         options.addWidget(play_random)
         options.addWidget(play_white)
@@ -55,7 +70,7 @@ class QtSettings(QFrame):
         self.color_buttons.setId(color2, 2)
         self.color_buttons.setId(color3, 3)
         color_label = QLabel('Board color:')
-        color_label.setFixedHeight(50)
+        color_label.setFixedHeight(20)
         options.addWidget(color_label)
         options.addWidget(color1)
         options.addWidget(color2)
@@ -74,7 +89,7 @@ class QtSettings(QFrame):
         self.level_buttons.setId(hard, 3)
 
         level_label = QLabel('Engine level:')
-        level_label.setFixedHeight(50)
+        level_label.setFixedHeight(20)
         options.addWidget(level_label)
         options.addWidget(easy)
         options.addWidget(medium)
@@ -86,7 +101,12 @@ class QtSettings(QFrame):
         self.save_btn.clicked.connect(self.save)
         buttons.addWidget(self.save_btn)
     
-        options.addWidget(QLabel('Advanced settings'))
+        advanced_settings_label = QLabel('Advanced settings')
+        advanced_settings_label.setFixedHeight(50)
+        header_font = QFont()
+        header_font.setPointSize(25)
+        advanced_settings_label.setFont(header_font)
+        options.addWidget(advanced_settings_label)
 
         self.alpha_beta_btn = QCheckBox('Alpha-Beta pruning')
         self.alpha_beta_btn.setChecked(True)

@@ -10,7 +10,6 @@ class QtMenu(QFrame):
         self.btn_text = {
             'game': 'New Game',
             'settings': 'Settings',
-            'help': 'Help',
             'exit': 'Exit'
         }
 
@@ -26,7 +25,6 @@ class QtMenu(QFrame):
         layout.addWidget(title)
         layout.addWidget(QtMenuItemButton(self, 'game'))
         layout.addWidget(QtMenuItemButton(self, 'settings'))
-        layout.addWidget(QtMenuItemButton(self, 'help'))
         layout.addWidget(QtMenuItemButton(self, 'exit'))
         self.setLayout(layout)
     
@@ -36,9 +34,6 @@ class QtMenu(QFrame):
 
     def settings(self):
         self.parent.stack.setCurrentWidget(self.parent.qt_settings)
-
-    def help(self):
-        self.parent.stack.setCurrentWidget(self.parent.qt_help)
     
     def exit(self):
         QApplication.quit()
