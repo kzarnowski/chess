@@ -141,7 +141,8 @@ class GameHandler():
     
 
     def resign(self):
-        result = '1-0' if self.engine.is_white else '1-0'
+        print("RESULT ENGINE WHITE: ", self.engine.is_white)
+        result = '1-0' if self.engine.is_white else '0-1'
         self.qt_game.display_result(result)
 
 

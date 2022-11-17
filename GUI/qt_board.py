@@ -21,7 +21,9 @@ class QtBoard(QFrame):
             for c in range(8):
                 square = QtSquare(self, r, c)
                 self.layout.addWidget(square, r, c)
-                self.squares[str(r+c)] = square
+                self.squares[str(r)+str(c)] = square
+
+        print(len(self.squares.values()))
 
     def display_starting_position(self, engine_is_white):
         self.is_flipped = engine_is_white
@@ -33,14 +35,23 @@ class QtBoard(QFrame):
         for an in list(self.pieces.keys()):
             self.remove_piece(an)
 
-    def get_squares_color(self):
-        squares_color = {
-            'classic': {
-                'dark': '#b88a4a',
-                'light': '#e3c16f'
-            }
+    def get_squares_color(self, color_num):
+        colors = {
+            'dark': '#b88a4a',
+            'light': '#e3c16f'
         }
-        return squares_color[self.gui.theme]
+        if color_num == 2:
+            colors['dark'] = '#769656'
+            colors['light'] = '#eeeed2'
+        elif color_num == 3:
+            colors['dark'] = '#4b648a'
+            colors['light'] = '#d0dff4'
+        return colors
+    
+    def set_squares_color(self, color_num):
+        colors = self.get_squares_color(color_num)
+        for square in self.squares.values():
+            square.set_colors(colors)
     
     def put_piece(self, symbol, an):
         r, c = an2rc(an, self.is_flipped)

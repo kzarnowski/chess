@@ -23,12 +23,11 @@ class Gui(QMainWindow):
         self.qt_menu = QtMenu(self)
         self.qt_game = QtGame(self)
         self.qt_settings = QtSettings(self)
-        self.qt_help = QtHelp(self)
 
         self.stack.insertWidget(0, self.qt_menu)
         self.stack.insertWidget(1, self.qt_game)
         self.stack.insertWidget(2, self.qt_settings)
-        self.stack.insertWidget(3, self.qt_help)
+        # self.stack.insertWidget(3, self.qt_help)
 
         self.stack.setCurrentWidget(self.qt_menu)
         self.setCentralWidget(self.stack)
