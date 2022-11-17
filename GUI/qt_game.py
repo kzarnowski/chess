@@ -22,7 +22,8 @@ class QtGame(QFrame):
 
         self.threadpool = QThreadPool()
 
-    def new_game(self, engine_is_white):
+    def new_game(self, engine_is_white, board_color_num):
+        self.qt_board.set_squares_color(board_color_num)
         self.qt_board.display_starting_position(engine_is_white)
         self.qt_board.setEnabled(True)
         self.qt_sidebar.notation.setText('')

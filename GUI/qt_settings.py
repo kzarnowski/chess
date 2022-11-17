@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QRadioButton, QButtonGroup
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QRadioButton, QButtonGroup, QCheckBox
 from GUI.qt_menu import QtMenuButton
 from GUI.qt_header import QtHeader
 
@@ -10,66 +10,75 @@ class QtSettings(QFrame):
         layout = QVBoxLayout()
         self.setLayout(layout)
 
-        options = QVBoxLayout()
+        dashboard = QHBoxLayout()
         buttons = QHBoxLayout()
 
-        layout.addLayout(options, 9)
+        layout.addLayout(dashboard, 9)
         layout.addLayout(buttons, 1)
+
+
+        options = QVBoxLayout()
+        help = QVBoxLayout()
+
+        dashboard.addLayout(options)
+        dashboard.addLayout(help)
         
-        play_buttons = QButtonGroup(self)
-        self.play_white = QRadioButton('White')
-        self.play_black = QRadioButton('Black')
-        self.play_random = QRadioButton('Random')
-        self.play_random.setChecked(True)
+        options.addWidget(QLabel('User settings'))
+
+        self.play_buttons = QButtonGroup(self)
+        play_white = QRadioButton('White')
+        play_black = QRadioButton('Black')
+        play_random = QRadioButton('Random')
+        play_random.setChecked(True)
         play_label = QLabel('Play as:')
         play_label.setFixedHeight(50)
         options.addWidget(play_label)
-        options.addWidget(self.play_random)
-        options.addWidget(self.play_white)
-        options.addWidget(self.play_black)
-        play_buttons.addButton(self.play_random)
-        play_buttons.addButton(self.play_white)
-        play_buttons.addButton(self.play_black)
-
-        # self.lang_buttons = QButtonGroup(self)
-        # self.lang_english = QRadioButton('English')
-        # self.lang_english.setChecked(True)
-        # self.lang_polish = QRadioButton('Polish')
-        # options.addWidget(QLabel('Language:'))
-        # options.addWidget(self.lang_english)
-        # options.addWidget(self.lang_polish)
-        # self.lang_buttons.addButton(self.lang_english)
-        # self.lang_buttons.addButton(self.lang_polish)
+        options.addWidget(play_random)
+        options.addWidget(play_white)
+        options.addWidget(play_black)
+        self.play_buttons.addButton(play_random)
+        self.play_buttons.addButton(play_white)
+        self.play_buttons.addButton(play_black)
+        self.play_buttons.setId(play_random, 1)
+        self.play_buttons.setId(play_white, 2)
+        self.play_buttons.setId(play_black, 3)
         
-        color_buttons = QButtonGroup(self)
-        self.color1 = QRadioButton('Color 1')
-        self.color2 = QRadioButton('Color 2')
-        self.color3 = QRadioButton('Color 3')
-        self.color1.setChecked(True)
-        color_buttons.addButton(self.color1)
-        color_buttons.addButton(self.color2)
-        color_buttons.addButton(self.color3)
+        self.color_buttons = QButtonGroup(self)
+        color1 = QRadioButton('Color 1')
+        color2 = QRadioButton('Color 2')
+        color3 = QRadioButton('Color 3')
+        color1.setChecked(True)
+        self.color_buttons.addButton(color1)
+        self.color_buttons.addButton(color2)
+        self.color_buttons.addButton(color3)
+        self.color_buttons.setId(color1, 1)
+        self.color_buttons.setId(color2, 2)
+        self.color_buttons.setId(color3, 3)
         color_label = QLabel('Board color:')
         color_label.setFixedHeight(50)
         options.addWidget(color_label)
-        options.addWidget(self.color1)
-        options.addWidget(self.color2)
-        options.addWidget(self.color3)
+        options.addWidget(color1)
+        options.addWidget(color2)
+        options.addWidget(color3)
 
-        level_buttons = QButtonGroup(self)
-        self.easy = QRadioButton('Easy')
-        self.medium = QRadioButton('Medium')
-        self.hard = QRadioButton('Hard')
-        self.easy.setChecked(True)
-        level_buttons.addButton(self.easy)
-        level_buttons.addButton(self.medium)
-        level_buttons.addButton(self.hard)
+        self.level_buttons = QButtonGroup(self)
+        easy = QRadioButton('Easy')
+        medium = QRadioButton('Medium')
+        hard = QRadioButton('Hard')
+        medium.setChecked(True)
+        self.level_buttons.addButton(easy)
+        self.level_buttons.addButton(medium)
+        self.level_buttons.addButton(hard)
+        self.level_buttons.setId(easy, 1)
+        self.level_buttons.setId(medium, 2)
+        self.level_buttons.setId(hard, 3)
+
         level_label = QLabel('Engine level:')
         level_label.setFixedHeight(50)
         options.addWidget(level_label)
-        options.addWidget(self.easy)
-        options.addWidget(self.medium)
-        options.addWidget(self.hard)
+        options.addWidget(easy)
+        options.addWidget(medium)
+        options.addWidget(hard)
 
         button_height = self.parent.frameGeometry().height() / 10
         self.save_btn = QPushButton('Save')
@@ -77,13 +86,32 @@ class QtSettings(QFrame):
         self.save_btn.clicked.connect(self.save)
         buttons.addWidget(self.save_btn)
     
-    def get_current_lang(self):
-        """ Get current language from settings, default: EN """
-        return self.lang_buttons.checkedButton().text()
-    
-    def cancel(self):
-        self.parent.stack.setCurrentWidget(self.parent.qt_menu)
-    
+        options.addWidget(QLabel('Advanced settings'))
+
+        self.alpha_beta_btn = QCheckBox('Alpha-Beta pruning')
+        self.alpha_beta_btn.setChecked(True)
+        self.move_ordering_btn = QCheckBox('Move ordering')
+        self.move_ordering_btn.setChecked(True)
+        self.quiescence_search_btn = QCheckBox('Quiescence search')
+        self.quiescence_search_btn.setChecked(True)
+        self.zobrist_btn = QCheckBox('Zobrist hashing')
+        self.zobrist_btn.setChecked(False)
+
+        options.addWidget(self.alpha_beta_btn)
+        options.addWidget(self.move_ordering_btn)
+        options.addWidget(self.quiescence_search_btn)
+        options.addWidget(self.zobrist_btn)
+
     def save(self):
         self.parent.stack.setCurrentWidget(self.parent.qt_menu)
-        
+    
+    def get_current_settings(self):
+        return {
+            'play_as': self.play_buttons.checkedId(),
+            'board_color': self.color_buttons.checkedId(),
+            'engine_level': self.level_buttons.checkedId(),
+            'alpha_beta': self.alpha_beta_btn.isChecked(),
+            'move_ordering': self.move_ordering_btn.isChecked(),
+            'quiescence_search': self.quiescence_search_btn.isChecked(),
+            'zobrist_hashing': self.zobrist_btn.isChecked()
+        }
