@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtCore import QThreadPool
-from PyQt5.QtGui import QTextCursor
 from GUI.qt_board import QtBoard
-from GUI.qt_header import QtHeader
 from GUI.qt_sidebar import QtSidebar
 
 class QtGame(QFrame):

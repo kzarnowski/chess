@@ -9,6 +9,7 @@ class QtMenu(QFrame):
         self.parent = parent
         self.btn_text = {
             'game': 'New Game',
+            'analysis': 'Analysis',
             'settings': 'Settings',
             'exit': 'Exit'
         }
@@ -24,6 +25,7 @@ class QtMenu(QFrame):
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
         layout.addWidget(QtMenuItemButton(self, 'game'))
+        layout.addWidget(QtMenuItemButton(self, 'analysis'))
         layout.addWidget(QtMenuItemButton(self, 'settings'))
         layout.addWidget(QtMenuItemButton(self, 'exit'))
         self.setLayout(layout)
@@ -31,6 +33,10 @@ class QtMenu(QFrame):
     def game(self):
         self.parent.app.new_game(self.parent.qt_game)
         self.parent.stack.setCurrentWidget(self.parent.qt_game)
+    
+    def analysis(self):
+        self.parent.app.new_analysis(self.parent.qt_analysis)
+        self.parent.stack.setCurrentWidget(self.parent.qt_analysis)
 
     def settings(self):
         self.parent.stack.setCurrentWidget(self.parent.qt_settings)
