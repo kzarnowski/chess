@@ -95,9 +95,9 @@ class QtSettings(QFrame):
         options.addWidget(medium)
         options.addWidget(hard)
 
-        button_height = self.parent.frameGeometry().height() / 10
+        button_height = self.parent.frameGeometry().height() // 10
         self.save_btn = QPushButton('Save')
-        self.save_btn.setFixedSize(self.parent.frameGeometry().width() / 2, button_height)
+        self.save_btn.setFixedSize(self.parent.frameGeometry().width() // 2, button_height)
         self.save_btn.clicked.connect(self.save)
         buttons.addWidget(self.save_btn)
     
